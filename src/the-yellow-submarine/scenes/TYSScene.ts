@@ -162,6 +162,7 @@ export default class TYSScene extends Scene {
 		this.receiver.subscribe(TYSEvents.CHARGE_CHANGE);
 		this.receiver.subscribe(TYSEvents.SHOOT_LASER);
 		this.receiver.subscribe(TYSEvents.DEAD);
+		this.receiver.subscribe(TYSEvents.PLAYER_MINE_COLLISION);
 
 		// Subscribe to laser events
 		this.receiver.subscribe(TYSEvents.FIRING_LASER);
@@ -225,6 +226,9 @@ export default class TYSScene extends Scene {
 			case TYSEvents.CHARGE_CHANGE: {
 				this.handleChargeChange(event.data.get("curchrg"), event.data.get("maxchrg"));
 				break;
+			}
+			case TYSEvents.PLAYER_MINE_COLLISION: {
+				this.handleMinePlayerCollisions();
 			}
 			case TYSEvents.FIRING_LASER: {
 				this.minesDestroyed += this.handleMineLaserCollisions(event.data.get("laser"), this.mines);

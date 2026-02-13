@@ -33,6 +33,7 @@ export default class MineBehavior implements AI {
         this.receiver = new Receiver();
         this.receiver.subscribe(TYSEvents.LASER_MINE_COLLISION);
         this.receiver.subscribe(TYSEvents.MINE_EXPLODED);
+        this.receiver.subscribe(TYSEvents.PLAYER_MINE_COLLISION)
 
         this.activate(options);
     }
@@ -51,6 +52,10 @@ export default class MineBehavior implements AI {
         switch(event.type) {
             case TYSEvents.LASER_MINE_COLLISION: {
                 this.handleLaserMineCollision(event);
+                break;
+            }
+            case TYSEvents.PLAYER_MINE_COLLISION: {
+                this.handlePlayerMineCollision(event);
                 break;
             }
             case TYSEvents.MINE_EXPLODED: {
@@ -84,6 +89,13 @@ export default class MineBehavior implements AI {
     }  
 
     protected handleLaserMineCollision(event: GameEvent): void {
+        let id = event.data.get("mineId");
+        if (id === this.owner.id) {
+            this.owner.animation.playIfNotAlready(MineAnimations.EXPLODING, false, TYSEvents.MINE_EXPLODED)
+        }
+    }
+
+    protected handlePlayerMineCollision(event: GameEvent): void {
         let id = event.data.get("mineId");
         if (id === this.owner.id) {
             this.owner.animation.playIfNotAlready(MineAnimations.EXPLODING, false, TYSEvents.MINE_EXPLODED)
